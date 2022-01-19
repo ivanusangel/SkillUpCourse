@@ -1,14 +1,17 @@
 package smirnov_task1;
 
-import java.util.Arrays;
+import java.util.Objects;
 
 public class ArrayList implements List {
+
+    public static final int INITIAL_SIZE = 10;
+    public static final float RESIZE_FACTOR = 1.5f;
 
     private Object[] arrayList;
     private int size = 0;
 
     public ArrayList() {
-        this(10);
+        this(INITIAL_SIZE);
     }
 
     public ArrayList(int i) {
@@ -18,37 +21,28 @@ public class ArrayList implements List {
 
     @Override
     public void add(Object value) {
-        if (size == arrayList.length - 1) {
-            resize();
-        }
-        arrayList[size++] = value;
+        add(value, size);
     }
 
     @Override
     public void add(Object value, int index) {
-        if (index >= size) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException();
         }
         if (size == arrayList.length - 1) {
             resize();
         }
-        for (int i = ++size; i > index; i--) {
-            arrayList[i] = arrayList[i - 1];
-        }
+        System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
         arrayList[index] = value;
-
     }
 
     @Override
     public Object remove(int index) {
-        if (index >= size) {
+        if (index < 0 || index > size - 1) {
             throw new IndexOutOfBoundsException();
         }
-
         Object o = get(index);
-        for (int i = index; i < size; i++) {
-            arrayList[i] = arrayList[i + 1];
-        }
+        System.arraycopy(arrayList, index + 1, arrayList, index, size - index);
         arrayList[size] = null;
         size--;
 
@@ -57,7 +51,7 @@ public class ArrayList implements List {
 
     @Override
     public Object get(int index) {
-        if (index > size) {
+        if (index < 0 || index > size - 1) {
             throw new IndexOutOfBoundsException();
         }
         return arrayList[index];
@@ -65,17 +59,17 @@ public class ArrayList implements List {
 
     @Override
     public Object set(Object value, int index) {
-        if (index >= size) {
+        if (index < 0 || index > size - 1) {
             throw new IndexOutOfBoundsException();
         }
-        return arrayList[index] = value;
+        Object o = get(index);
+        arrayList[index] = value;
+        return o;
     }
 
     @Override
     public void clear() {
-        for (int i = 0; i < size; i++) {
-            arrayList[i] = null;
-        }
+            arrayList= new Object[arrayList.length];
         size = 0;
     }
 
@@ -97,7 +91,7 @@ public class ArrayList implements List {
     @Override
     public int indexOf(Object value) {
         for (int i = 0; i < size; i++) {
-            if (checkValue(get(i), value)) {
+            if (Objects.equals(get(i), value)) {
                 return i;
             }
         }
@@ -107,7 +101,7 @@ public class ArrayList implements List {
     @Override
     public int lastIndexOf(Object value) {
         for (int i = size - 1; i >= 0; i--) {
-            if (checkValue(get(i), value)) {
+            if (Objects.equals(get(i), value)) {
                 return i;
             }
         }
@@ -134,17 +128,8 @@ public class ArrayList implements List {
     }
 
     private void resize() {
-        Object[] newList = new Object[arrayList.length * 2];
-        for (int i = 0; i < arrayList.length; i++) {
-            newList[i] = arrayList[i];
-        }
+        Object[] newList = new Object[(int) (arrayList.length * RESIZE_FACTOR)];
+        System.arraycopy(arrayList, 0, newList, 0, size);
         arrayList = newList;
-    }
-
-    private boolean checkValue(Object value1, Object value2) {
-        if (value1 == null) {
-            return value2 == null;
-        }
-        return value1.equals(value2);
     }
 }
