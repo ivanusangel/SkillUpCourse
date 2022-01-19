@@ -1,4 +1,4 @@
-package smirnov_task1;
+package task1_List;
 
 // Abstract Data Type
 public interface List {

@@ -1,4 +1,4 @@
-package smirnov_task1;
+package task1_List;
 
 import java.util.Objects;
 
@@ -27,19 +27,20 @@ public class ArrayList implements List {
     @Override
     public void add(Object value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index: " + index + ". Expected between 0 and " + size);
         }
-        if (size == arrayList.length - 1) {
+        if (size == arrayList.length) {
             resize();
         }
         System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
         arrayList[index] = value;
+        size++;
     }
 
     @Override
     public Object remove(int index) {
         if (index < 0 || index > size - 1) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index: " + index + ". Expected between 0 and " + (size - 1));
         }
         Object o = get(index);
         System.arraycopy(arrayList, index + 1, arrayList, index, size - index);
@@ -52,7 +53,7 @@ public class ArrayList implements List {
     @Override
     public Object get(int index) {
         if (index < 0 || index > size - 1) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index: " + index + ". Expected between 0 and " + (size - 1));
         }
         return arrayList[index];
     }
@@ -60,7 +61,7 @@ public class ArrayList implements List {
     @Override
     public Object set(Object value, int index) {
         if (index < 0 || index > size - 1) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index: " + index + ". Expected between 0 and " + (size - 1));
         }
         Object o = get(index);
         arrayList[index] = value;
@@ -69,7 +70,7 @@ public class ArrayList implements List {
 
     @Override
     public void clear() {
-            arrayList= new Object[arrayList.length];
+        arrayList = new Object[arrayList.length];
         size = 0;
     }
 
@@ -117,11 +118,7 @@ public class ArrayList implements List {
             sb.append(prefix);
             prefix = ", ";
             Object o = get(i);
-            if (o == null) {
-                sb.append("null");
-            } else {
-                sb.append(o);
-            }
+            sb.append(o);
         }
         sb.append("]");
         return sb.toString();
