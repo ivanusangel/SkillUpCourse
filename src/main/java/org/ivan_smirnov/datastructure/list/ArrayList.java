@@ -1,14 +1,15 @@
-package task1_List;
+package org.ivan_smirnov.datastructure.list;
 
+import java.util.Iterator;
 import java.util.Objects;
+import java.util.StringJoiner;
 
-public class ArrayList implements List {
+public class ArrayList extends AbstractList implements List, Iterable {
 
-    public static final int INITIAL_SIZE = 10;
-    public static final float RESIZE_FACTOR = 1.5f;
+    private static final int INITIAL_SIZE = 10;
+    private static final float RESIZE_FACTOR = 1.5f;
 
     private Object[] arrayList;
-    private int size = 0;
 
     public ArrayList() {
         this(INITIAL_SIZE);
@@ -18,17 +19,9 @@ public class ArrayList implements List {
         arrayList = new Object[i];
     }
 
-
-    @Override
-    public void add(Object value) {
-        add(value, size);
-    }
-
     @Override
     public void add(Object value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index: " + index + ". Expected between 0 and " + size);
-        }
+        checkIndex(index, size);
         if (size == arrayList.length) {
             resize();
         }
@@ -39,30 +32,26 @@ public class ArrayList implements List {
 
     @Override
     public Object remove(int index) {
-        if (index < 0 || index > size - 1) {
-            throw new IndexOutOfBoundsException("Index: " + index + ". Expected between 0 and " + (size - 1));
-        }
+        checkIndex(index, size - 1);
         Object o = get(index);
-        System.arraycopy(arrayList, index + 1, arrayList, index, size - index);
-        arrayList[size] = null;
+        if (index < size - 1) {
+            System.arraycopy(arrayList, index + 1, arrayList, index, size - index);
+        } else {
+            arrayList[size - 1] = null;
+        }
         size--;
-
         return o;
     }
 
     @Override
     public Object get(int index) {
-        if (index < 0 || index > size - 1) {
-            throw new IndexOutOfBoundsException("Index: " + index + ". Expected between 0 and " + (size - 1));
-        }
+        checkIndex(index, size - 1);
         return arrayList[index];
     }
 
     @Override
     public Object set(Object value, int index) {
-        if (index < 0 || index > size - 1) {
-            throw new IndexOutOfBoundsException("Index: " + index + ". Expected between 0 and " + (size - 1));
-        }
+        checkIndex(index, size - 1);
         Object o = get(index);
         arrayList[index] = value;
         return o;
@@ -72,21 +61,6 @@ public class ArrayList implements List {
     public void clear() {
         arrayList = new Object[arrayList.length];
         size = 0;
-    }
-
-    @Override
-    public int size() {
-        return this.size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    @Override
-    public boolean contains(Object value) {
-        return indexOf(value) != -1;
     }
 
     @Override
@@ -110,18 +84,33 @@ public class ArrayList implements List {
     }
 
     @Override
+    public Iterator iterator() {
+        return new Iterator() {
+            int index = 0;
+            @Override
+            public boolean hasNext() {
+                return index < size;
+            }
+
+            @Override
+            public Object next() {
+                return get(index++);
+            }
+
+            @Override
+            public void remove() {
+                ArrayList.this.remove(index);
+            }
+        };
+    }
+
+    @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        String prefix = "";
-        sb.append("[");
+        StringJoiner stringJoiner = new StringJoiner(", ", "[", "]");
         for (int i = 0; i < size; i++) {
-            sb.append(prefix);
-            prefix = ", ";
-            Object o = get(i);
-            sb.append(o);
+            stringJoiner.add(String.valueOf(get(i)));
         }
-        sb.append("]");
-        return sb.toString();
+        return stringJoiner.toString();
     }
 
     private void resize() {

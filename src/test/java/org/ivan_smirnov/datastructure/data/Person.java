@@ -1,4 +1,4 @@
-package data;
+package org.ivan_smirnov.datastructure.data;
 
 import java.util.Objects;
 

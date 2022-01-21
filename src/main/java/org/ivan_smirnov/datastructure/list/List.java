@@ -1,4 +1,4 @@
-package task1_List;
+package org.ivan_smirnov.datastructure.list;
 
 // Abstract Data Type
 public interface List {

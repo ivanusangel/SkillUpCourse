@@ -1,37 +1,22 @@
-package task1_List;
+package org.ivan_smirnov.datastructure.list;
 
-import data.Person;
+import org.ivan_smirnov.datastructure.data.Person;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
-import java.util.Arrays;
-import java.util.Collection;
+public abstract class ListTest {
+    private static final Person SARA = new Person("Sara", 29);
+    private static final Person TERMINATOR = new Person("Terminator", 1000);
+    private static final Person IVAN = new Person("Ivan", 39);
+    private static final Person DIMON = new Person("Dimon", 25);
 
-@RunWith(value = Parameterized.class)
-public class TestList {
-    public static final int INITIAL_SIZE = 5;
-    public static final Person SARA = new Person("Sara", 29);
-    public static final Person TERMINATOR = new Person("Terminator", 1000);
-    public static final Person IVAN = new Person("Ivan", 39);
-    public static final Person DIMON = new Person("Dimon", 25);
+    public List list = getList();
 
-    public List list;
-
-    @Parameterized.Parameters
-    public static Collection<Object> useListTypes() {
-        return Arrays.asList(new Object[]{new ArrayList(INITIAL_SIZE), new LinkedList()});
-    }
-
-    public TestList(List list) {
-        this.list = list;
-    }
+    public abstract List getList();
 
     @Before
     public void initList() {
-        list.clear();
         list.add(IVAN);
         list.add(DIMON);
     }
@@ -45,7 +30,7 @@ public class TestList {
     }
 
     @Test
-    public void addIntoListPositive() {
+    public void addIntoMiddleOfListPositive() {
         Assert.assertEquals(DIMON, list.get(1));
         list.add(SARA, 1);
         Assert.assertEquals(3, list.size());
@@ -54,7 +39,7 @@ public class TestList {
     }
 
     @Test
-    public void addIntoListNegative() {
+    public void addIntoMiddleOfListNegative() {
         Assert.assertEquals(2, list.size());
 
         Exception exception = Assert.assertThrows(
@@ -75,25 +60,12 @@ public class TestList {
     }
 
     @Test
-    public void addToListThisResize() {
-        for (int i = list.size(); i < INITIAL_SIZE; i++) {
-            list.add(null);
-        }
-        Assert.assertEquals(INITIAL_SIZE, list.size());
-        list.add(new Person("Resizer", 100));
-        Assert.assertEquals(INITIAL_SIZE + 1, list.size());
-    }
-
-
-    @Test
     public void getFromListPositive() {
         Assert.assertEquals(DIMON, list.get(1));
     }
 
     @Test
-    public void getFromListNegative() {
-        Assert.assertEquals(2, list.size());
-
+    public void getFromListNegativeLowerRange() {
         Exception exception = Assert.assertThrows(
                 IndexOutOfBoundsException.class,
                 () -> list.get(-2)
@@ -101,13 +73,16 @@ public class TestList {
         String expectedMessage = "Index: -2. Expected between 0 and 1";
         String actualMessage = exception.getLocalizedMessage();
         Assert.assertEquals(expectedMessage, actualMessage);
+    }
 
-        exception = Assert.assertThrows(
+    @Test
+    public void getFromListNegativeUpperRange() {
+        Exception exception = Assert.assertThrows(
                 IndexOutOfBoundsException.class,
                 () -> list.get(5)
         );
-        expectedMessage = "Index: 5. Expected between 0 and 1";
-        actualMessage = exception.getLocalizedMessage();
+        String expectedMessage = "Index: 5. Expected between 0 and 1";
+        String actualMessage = exception.getLocalizedMessage();
         Assert.assertEquals(expectedMessage, actualMessage);
     }
 
@@ -122,9 +97,7 @@ public class TestList {
     }
 
     @Test
-    public void setIntoListNegative() {
-        Assert.assertEquals(2, list.size());
-
+    public void setIntoListNegativeLowerRange() {
         Exception exception = Assert.assertThrows(
                 IndexOutOfBoundsException.class,
                 () -> list.get(-2)
@@ -132,13 +105,16 @@ public class TestList {
         String expectedMessage = "Index: -2. Expected between 0 and 1";
         String actualMessage = exception.getLocalizedMessage();
         Assert.assertEquals(expectedMessage, actualMessage);
+    }
 
-        exception = Assert.assertThrows(
+    @Test
+    public void setIntoListNegativeUpperRange() {
+        Exception exception = Assert.assertThrows(
                 IndexOutOfBoundsException.class,
                 () -> list.get(5)
         );
-        expectedMessage = "Index: 5. Expected between 0 and 1";
-        actualMessage = exception.getLocalizedMessage();
+        String expectedMessage = "Index: 5. Expected between 0 and 1";
+        String actualMessage = exception.getLocalizedMessage();
         Assert.assertEquals(expectedMessage, actualMessage);
     }
 
@@ -152,9 +128,7 @@ public class TestList {
     }
 
     @Test
-    public void removeFromListNegative() {
-        Assert.assertEquals(2, list.size());
-
+    public void removeFromListNegativeLowerRange() {
         Exception exception = Assert.assertThrows(
                 IndexOutOfBoundsException.class,
                 () -> list.remove(-2)
@@ -162,13 +136,16 @@ public class TestList {
         String expectedMessage = "Index: -2. Expected between 0 and 1";
         String actualMessage = exception.getLocalizedMessage();
         Assert.assertEquals(expectedMessage, actualMessage);
+    }
 
-        exception = Assert.assertThrows(
+    @Test
+    public void removeFromListNegativeUpperRange() {
+        Exception exception = Assert.assertThrows(
                 IndexOutOfBoundsException.class,
                 () -> list.remove(5)
         );
-        expectedMessage = "Index: 5. Expected between 0 and 1";
-        actualMessage = exception.getLocalizedMessage();
+        String expectedMessage = "Index: 5. Expected between 0 and 1";
+        String actualMessage = exception.getLocalizedMessage();
         Assert.assertEquals(expectedMessage, actualMessage);
     }
 

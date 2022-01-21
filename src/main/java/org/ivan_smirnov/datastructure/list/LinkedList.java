@@ -1,4 +1,4 @@
-package task1_List;
+package org.ivan_smirnov.datastructure.list;
 
 public class LinkedList implements List {
 
@@ -46,6 +46,7 @@ public class LinkedList implements List {
         }
         if (index > 0 && index < size) {
             Node currentNode = getNode(index);
+            currentNode.prev.next = newNode;
             newNode.next = currentNode;
             newNode.prev = currentNode.prev;
             currentNode.prev = newNode;
@@ -108,14 +109,14 @@ public class LinkedList implements List {
             throw new IndexOutOfBoundsException("Index: " + index + ". Expected between 0 and " + (size - 1));
         }
         Node currentNode;
-        if (index <= size / 2) {
+        if (index * 2 <= size) {
             currentNode = first;
             for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
             }
         } else {
             currentNode = last;
-            for (int i = size; i > index; i--) {
+            for (int i = size; i > index + 1; i--) {
                 currentNode = currentNode.prev;
             }
         }
