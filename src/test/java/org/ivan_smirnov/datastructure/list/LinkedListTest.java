@@ -1,8 +1,10 @@
 package org.ivan_smirnov.datastructure.list;
 
+import org.ivan_smirnov.datastructure.data.Person;
+
 public class LinkedListTest extends ListTest{
     @Override
-    public List getList() {
-        return new LinkedList();
+    public List<Person> getList() {
+        return new LinkedList<>();
     }
 }

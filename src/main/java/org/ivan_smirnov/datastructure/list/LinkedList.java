@@ -1,13 +1,15 @@
 package org.ivan_smirnov.datastructure.list;
 
-public class LinkedList implements List {
+import java.util.Iterator;
+
+public class LinkedList<T> implements List<T> {
 
     private class Node {
         Node prev;
         Node next;
-        Object value;
+        T value;
 
-        public Node(Object value) {
+        public Node(T value) {
             this.value = value;
         }
     }
@@ -20,12 +22,12 @@ public class LinkedList implements List {
     }
 
     @Override
-    public void add(Object value) {
+    public void add(T value) {
         add(value, size);
     }
 
     @Override
-    public void add(Object value, int index) {
+    public void add(T value, int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index: " + index + ". Expected between 0 and " + size);
         }
@@ -55,7 +57,7 @@ public class LinkedList implements List {
     }
 
     @Override
-    public Object remove(int index) {
+    public T remove(int index) {
         Node currentNode = getNode(index);
         currentNode.prev.next = currentNode.next;
         currentNode.next.prev = currentNode.prev;
@@ -63,12 +65,12 @@ public class LinkedList implements List {
     }
 
     @Override
-    public Object get(int index) {
+    public T get(int index) {
         return getNode(index).value;
     }
 
     @Override
-    public Object set(Object value, int index) {
+    public T set(T value, int index) {
         return null;
     }
 
@@ -90,18 +92,42 @@ public class LinkedList implements List {
     }
 
     @Override
-    public boolean contains(Object value) {
+    public boolean contains(T value) {
         return false;
     }
 
     @Override
-    public int indexOf(Object value) {
+    public int indexOf(T value) {
         return 0;
     }
 
     @Override
-    public int lastIndexOf(Object value) {
+    public int lastIndexOf(T value) {
+        for (int i = 0; i < 10; i++) {
+            
+        }
         return 0;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<>() {
+            int index;
+            @Override
+            public boolean hasNext() {
+                return index < size;
+            }
+
+            @Override
+            public T next() {
+                return null;
+            }
+
+            @Override
+            public void remove() {
+                LinkedList.this.remove(index);
+            }
+        };
     }
 
     private Node getNode(int index) {

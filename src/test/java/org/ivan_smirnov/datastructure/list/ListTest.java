@@ -11,9 +11,9 @@ public abstract class ListTest {
     private static final Person IVAN = new Person("Ivan", 39);
     private static final Person DIMON = new Person("Dimon", 25);
 
-    public List list = getList();
+    public List<Person> list = getList();
 
-    public abstract List getList();
+    public abstract List<Person> getList();
 
     @Before
     public void initList() {
@@ -90,7 +90,7 @@ public abstract class ListTest {
     public void setIntoListPositive() {
         Assert.assertEquals(2, list.size());
         Assert.assertEquals(DIMON, list.get(1));
-        Object replaced = list.set(SARA, 1);
+        Person replaced = list.set(SARA, 1);
         Assert.assertEquals(2, list.size());
         Assert.assertEquals(SARA, list.get(1));
         Assert.assertEquals(DIMON, replaced);
@@ -120,9 +120,9 @@ public abstract class ListTest {
 
     @Test
     public void removeFromListPositive() {
-        Object beforeRemove = list.get(1);
+        Person beforeRemove = list.get(1);
         Assert.assertEquals(2, list.size());
-        Object removed = list.remove(1);
+        Person removed = list.remove(1);
         Assert.assertEquals(1, list.size());
         Assert.assertEquals(beforeRemove, removed);
     }

@@ -8,8 +8,8 @@ public class ArrayListTest extends ListTest {
     private static final int INITIAL_SIZE = 5;
 
     @Override
-    public List getList() {
-        return new ArrayList(INITIAL_SIZE);
+    public List<Person> getList() {
+        return new ArrayList<>(INITIAL_SIZE);
     }
 
     @Test

@@ -1,10 +1,10 @@
 package org.ivan_smirnov.datastructure.list;
 
-public abstract class AbstractList implements List {
+public abstract class AbstractList<T> implements List<T> {
     protected int size = 0;
 
     @Override
-    public void add(Object value) {
+    public void add(T value) {
         add(value, size);
     }
 
@@ -19,14 +19,14 @@ public abstract class AbstractList implements List {
     }
 
     @Override
-    public boolean contains(Object value) {
+    public boolean contains(T value) {
         return indexOf(value) != -1;
     }
 
     protected void checkIndex(int index, int max) {
         if (index < 0 || index > max) {
 
-            throw new IndexOutOfBoundsException("Index: " + index + ". Expected between 0 and " + (size - 1));
+            throw new IndexOutOfBoundsException("Index: " + index + ". Expected between 0 and " + max);
         }
     }
 }

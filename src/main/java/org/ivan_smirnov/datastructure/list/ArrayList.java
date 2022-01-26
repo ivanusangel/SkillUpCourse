@@ -4,23 +4,23 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public class ArrayList extends AbstractList implements List, Iterable {
+public class ArrayList<T> extends AbstractList<T> {
 
     private static final int INITIAL_SIZE = 10;
     private static final float RESIZE_FACTOR = 1.5f;
 
-    private Object[] arrayList;
+    private T[] arrayList;
 
     public ArrayList() {
         this(INITIAL_SIZE);
     }
 
     public ArrayList(int i) {
-        arrayList = new Object[i];
+        arrayList = (T[]) new Object[i];
     }
 
     @Override
-    public void add(Object value, int index) {
+    public void add(T value, int index) {
         checkIndex(index, size);
         if (size == arrayList.length) {
             resize();
@@ -31,9 +31,9 @@ public class ArrayList extends AbstractList implements List, Iterable {
     }
 
     @Override
-    public Object remove(int index) {
+    public T remove(int index) {
         checkIndex(index, size - 1);
-        Object o = get(index);
+        T o = get(index);
         if (index < size - 1) {
             System.arraycopy(arrayList, index + 1, arrayList, index, size - index);
         } else {
@@ -44,27 +44,27 @@ public class ArrayList extends AbstractList implements List, Iterable {
     }
 
     @Override
-    public Object get(int index) {
+    public T get(int index) {
         checkIndex(index, size - 1);
         return arrayList[index];
     }
 
     @Override
-    public Object set(Object value, int index) {
+    public T set(T value, int index) {
         checkIndex(index, size - 1);
-        Object o = get(index);
+        T o = get(index);
         arrayList[index] = value;
         return o;
     }
 
     @Override
     public void clear() {
-        arrayList = new Object[arrayList.length];
+        arrayList = (T[]) new Object[arrayList.length];
         size = 0;
     }
 
     @Override
-    public int indexOf(Object value) {
+    public int indexOf(T value) {
         for (int i = 0; i < size; i++) {
             if (Objects.equals(get(i), value)) {
                 return i;
@@ -84,8 +84,8 @@ public class ArrayList extends AbstractList implements List, Iterable {
     }
 
     @Override
-    public Iterator iterator() {
-        return new Iterator() {
+    public Iterator<T> iterator() {
+        return new Iterator<>() {
             int index = 0;
             @Override
             public boolean hasNext() {
@@ -93,7 +93,7 @@ public class ArrayList extends AbstractList implements List, Iterable {
             }
 
             @Override
-            public Object next() {
+            public T next() {
                 return get(index++);
             }
 
@@ -114,7 +114,7 @@ public class ArrayList extends AbstractList implements List, Iterable {
     }
 
     private void resize() {
-        Object[] newList = new Object[(int) (arrayList.length * RESIZE_FACTOR)];
+        T[] newList = (T[]) new Object[(int) (arrayList.length * RESIZE_FACTOR)];
         System.arraycopy(arrayList, 0, newList, 0, size);
         arrayList = newList;
     }
