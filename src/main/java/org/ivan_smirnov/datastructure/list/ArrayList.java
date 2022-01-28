@@ -1,6 +1,7 @@
 package org.ivan_smirnov.datastructure.list;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -87,6 +88,8 @@ public class ArrayList<T> extends AbstractList<T> {
     public Iterator<T> iterator() {
         return new Iterator<>() {
             int index = 0;
+            boolean removed = true;
+
             @Override
             public boolean hasNext() {
                 return index < size;
@@ -94,12 +97,20 @@ public class ArrayList<T> extends AbstractList<T> {
 
             @Override
             public T next() {
-                return get(index++);
+                if(hasNext()) {
+                    removed = false;
+                    return get(index++);
+                }
+                throw new NoSuchElementException("There is no more elements in the list");
             }
 
             @Override
             public void remove() {
-                ArrayList.this.remove(index);
+                if (removed) {
+                    throw new IllegalStateException("Nothing to remove. Remove() called without next()");
+                }
+                ArrayList.this.remove(index - 1);
+                removed = true;
             }
         };
     }

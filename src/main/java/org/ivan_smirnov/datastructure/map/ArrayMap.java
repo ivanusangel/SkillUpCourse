@@ -73,6 +73,7 @@ public class ArrayMap<K, V> implements Map<K, V> {
                 Entry<K, V> entry = iterator.next();
                 if (Objects.equals(entry.key, key)) {
                     iterator.remove();
+                    size--;
                     return entry;
                 }
             }

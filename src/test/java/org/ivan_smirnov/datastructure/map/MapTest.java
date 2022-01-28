@@ -56,10 +56,9 @@ public class MapTest {
     @Test
     public void getNegative() {
         Exception exception = Assert.assertThrows(
-                "There is no key = 1",
                 NoSuchElementException.class,
                 () -> map.get(1));
-        String expectedMessage = "Index: -2. Expected between 0 and 2";
+        String expectedMessage = "There is no key = 1";
         String actualMessage = exception.getMessage();
         Assert.assertEquals(expectedMessage, actualMessage);
     }
@@ -88,11 +87,23 @@ public class MapTest {
         Assert.assertEquals(3, map.size());
         Map.Entry<Integer, String> oldValue = map.remove(1);
         Assert.assertEquals(3, map.size());
-        Assert.assertEquals(null, oldValue);
+        Assert.assertNull(oldValue);
     }
 
-//    TODO
-//    List<K> keySet();
+    @Test
+    public void keySetTest(){
+        Assert.assertEquals(3, map.size());
+        List<Integer> expectedList = new ArrayList<>(3);
+        expectedList.add(0);
+        expectedList.add(3);
+        expectedList.add(4);
+        int index = 0;
+
+        List<Integer> actualList = map.keySet();
+        for (Integer key: actualList) {
+            Assert.assertEquals(expectedList.get(index++), key);
+        }
+    }
 
     @Test
     public void iteratorWithSomeEmptyBuckets() {

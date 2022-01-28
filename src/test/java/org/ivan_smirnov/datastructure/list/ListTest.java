@@ -47,7 +47,7 @@ public abstract class ListTest {
                 () -> list.add(TERMINATOR, -2)
         );
         String expectedMessage = "Index: -2. Expected between 0 and 2";
-        String actualMessage = exception.getLocalizedMessage();
+        String actualMessage = exception.getMessage();
         Assert.assertEquals(expectedMessage, actualMessage);
 
         exception = Assert.assertThrows(
@@ -55,7 +55,7 @@ public abstract class ListTest {
                 () -> list.add(TERMINATOR, 5)
         );
         expectedMessage = "Index: 5. Expected between 0 and 2";
-        actualMessage = exception.getLocalizedMessage();
+        actualMessage = exception.getMessage();
         Assert.assertEquals(expectedMessage, actualMessage);
     }
 
@@ -71,7 +71,7 @@ public abstract class ListTest {
                 () -> list.get(-2)
         );
         String expectedMessage = "Index: -2. Expected between 0 and 1";
-        String actualMessage = exception.getLocalizedMessage();
+        String actualMessage = exception.getMessage();
         Assert.assertEquals(expectedMessage, actualMessage);
     }
 
@@ -82,7 +82,7 @@ public abstract class ListTest {
                 () -> list.get(5)
         );
         String expectedMessage = "Index: 5. Expected between 0 and 1";
-        String actualMessage = exception.getLocalizedMessage();
+        String actualMessage = exception.getMessage();
         Assert.assertEquals(expectedMessage, actualMessage);
     }
 
@@ -103,7 +103,7 @@ public abstract class ListTest {
                 () -> list.get(-2)
         );
         String expectedMessage = "Index: -2. Expected between 0 and 1";
-        String actualMessage = exception.getLocalizedMessage();
+        String actualMessage = exception.getMessage();
         Assert.assertEquals(expectedMessage, actualMessage);
     }
 
@@ -114,7 +114,7 @@ public abstract class ListTest {
                 () -> list.get(5)
         );
         String expectedMessage = "Index: 5. Expected between 0 and 1";
-        String actualMessage = exception.getLocalizedMessage();
+        String actualMessage = exception.getMessage();
         Assert.assertEquals(expectedMessage, actualMessage);
     }
 
@@ -134,7 +134,7 @@ public abstract class ListTest {
                 () -> list.remove(-2)
         );
         String expectedMessage = "Index: -2. Expected between 0 and 1";
-        String actualMessage = exception.getLocalizedMessage();
+        String actualMessage = exception.getMessage();
         Assert.assertEquals(expectedMessage, actualMessage);
     }
 
@@ -145,7 +145,7 @@ public abstract class ListTest {
                 () -> list.remove(5)
         );
         String expectedMessage = "Index: 5. Expected between 0 and 1";
-        String actualMessage = exception.getLocalizedMessage();
+        String actualMessage = exception.getMessage();
         Assert.assertEquals(expectedMessage, actualMessage);
     }
 
