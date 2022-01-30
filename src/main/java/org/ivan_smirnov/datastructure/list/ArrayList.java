@@ -110,6 +110,7 @@ public class ArrayList<T> extends AbstractList<T> {
                     throw new IllegalStateException("Nothing to remove. Remove() called without next()");
                 }
                 ArrayList.this.remove(index - 1);
+                size--;
                 removed = true;
             }
         };

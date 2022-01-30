@@ -26,17 +26,17 @@ public class ArrayMap<K, V> implements Map<K, V> {
 
     @Override
     public V put(K key, V value) {
-        int currentBucket = getBucket(key);
+        int currentBucketIndex = getBucketIndex(key);
         Entry<K, V> entry = null;
-        if (buckets[currentBucket] == null) {
-            buckets[currentBucket] = new ArrayList<>();
+        if (buckets[currentBucketIndex] == null) {
+            buckets[currentBucketIndex] = new ArrayList<>();
         } else {
             entry = getEntry(key);
         }
         if (entry == null) {
-            buckets[currentBucket].add(new Entry<>(key, value));
+            buckets[currentBucketIndex].add(new Entry<>(key, value));
             size++;
-            return value;
+            return null;
         } else {
             V oldValue = entry.value;
             entry.value = value;
@@ -66,9 +66,9 @@ public class ArrayMap<K, V> implements Map<K, V> {
 
     @Override
     public Entry<K, V> remove(K key) {
-        List<Entry<K, V>> bucketList = buckets[getBucket(key)];
-        if (bucketList != null) {
-            Iterator<Entry<K, V>> iterator = bucketList.iterator();
+        List<Entry<K, V>> bucket = buckets[getBucketIndex(key)];
+        if (bucket != null) {
+            Iterator<Entry<K, V>> iterator = bucket.iterator();
             while (iterator.hasNext()) {
                 Entry<K, V> entry = iterator.next();
                 if (Objects.equals(entry.key, key)) {
@@ -95,8 +95,8 @@ public class ArrayMap<K, V> implements Map<K, V> {
         return new Iterator<>() {
             int currentBucketNum = 0;
             int currentElementNum = 0;
-            Iterator<Entry<K, V>> current = null;
-            boolean removed = true;
+            Iterator<Entry<K, V>> currentIterator = null;
+            boolean nextCalled = false;
 
             @Override
             public boolean hasNext() {
@@ -112,16 +112,16 @@ public class ArrayMap<K, V> implements Map<K, V> {
                             currentBucketNum++;
                             continue;
                         }
-                        if (current == null) {
-                            current = currentBucket.iterator();
+                        if (currentIterator == null) {
+                            currentIterator = currentBucket.iterator();
                         }
-                        if (current.hasNext()) {
-                            removed = false;
+                        if (currentIterator.hasNext()) {
+                            nextCalled = true;
                             currentElementNum++;
-                            return current.next();
+                            return currentIterator.next();
                         } else {
                             currentBucketNum++;
-                            current = null;
+                            currentIterator = null;
                         }
                     }
                 }
@@ -130,24 +130,25 @@ public class ArrayMap<K, V> implements Map<K, V> {
 
             @Override
             public void remove() {
-                if (removed) {
+                if (!nextCalled) {
                     throw new IllegalStateException("Nothing to remove. Remove() called without next()");
                 }
-                current.remove();
-                removed = true;
+                currentIterator.remove();
+                size--;
+                nextCalled = false;
             }
         };
     }
 
-    private int getBucket(K key) {
+    private int getBucketIndex(K key) {
         if (key == null) {
             return 0;
         }
-        return key.hashCode() % bucketsNum;
+        return Math.abs(key.hashCode()) % bucketsNum;
     }
 
     private Entry<K, V> getEntry(K key) {
-        List<Entry<K, V>> bucketList = buckets[getBucket(key)];
+        List<Entry<K, V>> bucketList = buckets[getBucketIndex(key)];
         if (bucketList == null) {
             return null;
         }

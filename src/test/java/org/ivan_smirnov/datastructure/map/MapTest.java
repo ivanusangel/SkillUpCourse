@@ -6,12 +6,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class MapTest {
 
     private static final int INITIAL_SIZE = 5;
-    private Map<Integer, String> map = new ArrayMap<>(INITIAL_SIZE);
+    private final Map<Integer, String> map = new ArrayMap<>(INITIAL_SIZE);
 
     @Before
     public void init() {
@@ -26,7 +27,7 @@ public class MapTest {
         String oldValue = map.put(1, "test1");
         Assert.assertEquals(4, map.size());
         Assert.assertEquals("test1", map.get(1));
-        Assert.assertEquals("test1", oldValue);
+        Assert.assertNull(oldValue);
     }
 
     @Test
@@ -36,7 +37,7 @@ public class MapTest {
         Assert.assertEquals(4, map.size());
         Assert.assertEquals("test0", map.get(0));
         Assert.assertEquals("test1", map.get(INITIAL_SIZE));
-        Assert.assertEquals("test1", oldValue);
+        Assert.assertNull(oldValue);
     }
 
     @Test
@@ -54,7 +55,13 @@ public class MapTest {
     }
 
     @Test
-    public void getNegative() {
+    public void getByNullKey() {
+        map.put(null, "testNull");
+        Assert.assertEquals("testNull", map.get(null));
+    }
+
+    @Test
+    public void getByNonExistKeyThrowsException() {
         Exception exception = Assert.assertThrows(
                 NoSuchElementException.class,
                 () -> map.get(1));
@@ -139,9 +146,33 @@ public class MapTest {
         }
     }
 
-//    TODO
-//    @Test
-//    public void iteratorRevome() {
-//
-//    }
+    @Test
+    public void iteratorRemovePositive() {
+        Assert.assertEquals(3, map.size());
+
+        Iterator<Map.Entry<Integer, String>> iterator = map.iterator();
+        iterator.next();
+        iterator.next();
+        iterator.remove();
+        Assert.assertEquals(2, map.size());
+
+        List<String> expectedList = new ArrayList<>(3);
+        expectedList.add("test0");
+        expectedList.add("test4");
+        int index = 0;
+
+        for (Map.Entry<Integer, String> entry : map) {
+            Assert.assertEquals(expectedList.get(index++), entry.value);
+        }
+    }
+    @Test
+    public void iteratorRemoveNegative() {
+        Iterator<Map.Entry<Integer, String>> iterator = map.iterator();
+        Exception exception = Assert.assertThrows(
+                IllegalStateException.class,
+                iterator::remove);
+        String expectedMessage = "Nothing to remove. Remove() called without next()";
+        String actualMessage = exception.getMessage();
+        Assert.assertEquals(expectedMessage, actualMessage);
+    }
 }
