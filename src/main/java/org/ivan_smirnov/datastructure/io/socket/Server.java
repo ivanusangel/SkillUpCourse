@@ -20,7 +20,7 @@ public class Server {
                     int count = inputStream.read(buffer);
                     System.out.println(new String(buffer, 0, count));
                     outputStream.write("echo ".getBytes(StandardCharsets.UTF_8));
-                    outputStream.write(buffer);
+                    outputStream.write(buffer, 0, count);
                     outputStream.flush();
                 }
             }
