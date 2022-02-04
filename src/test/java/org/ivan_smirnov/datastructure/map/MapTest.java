@@ -104,11 +104,10 @@ public class MapTest {
         expectedList.add(0);
         expectedList.add(3);
         expectedList.add(4);
-        int index = 0;
 
         List<Integer> actualList = map.keySet();
         for (Integer key: actualList) {
-            Assert.assertEquals(expectedList.get(index++), key);
+            Assert.assertTrue(expectedList.contains(key));
         }
     }
 
@@ -122,7 +121,7 @@ public class MapTest {
         int index = 0;
 
         for (Map.Entry<Integer, String> entry : map) {
-            Assert.assertEquals(expectedList.get(index++), entry.value);
+            Assert.assertTrue(expectedList.contains(entry.value));
         }
     }
 
@@ -142,7 +141,7 @@ public class MapTest {
         int index = 0;
 
         for (Map.Entry<Integer, String> entry : map) {
-            Assert.assertEquals(expectedList.get(index++), entry.value);
+            Assert.assertTrue(expectedList.contains(entry.value));
         }
     }
 
@@ -162,7 +161,7 @@ public class MapTest {
         int index = 0;
 
         for (Map.Entry<Integer, String> entry : map) {
-            Assert.assertEquals(expectedList.get(index++), entry.value);
+            Assert.assertTrue(expectedList.contains(entry.value));
         }
     }
     @Test

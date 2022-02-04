@@ -10,8 +10,8 @@ import java.util.Objects;
 public class ArrayMap<K, V> implements Map<K, V> {
 
     public static final int DEFAULT_BUCKET_NUM = 10;
+    public static final float LOAD_FACTOR = 0.75f;
     private int size = 0;
-    private int bucketsNum;
 
     private List<Entry<K, V>>[] buckets;
 
@@ -20,20 +20,21 @@ public class ArrayMap<K, V> implements Map<K, V> {
     }
 
     public ArrayMap(int bucketNum) {
-        this.bucketsNum = bucketNum;
         buckets = new ArrayList[bucketNum];
+        for (int i = 0; i < bucketNum; i++) {
+            buckets[i] = new ArrayList<>();
+        }
     }
 
     @Override
     public V put(K key, V value) {
         int currentBucketIndex = getBucketIndex(key);
-        Entry<K, V> entry = null;
-        if (buckets[currentBucketIndex] == null) {
-            buckets[currentBucketIndex] = new ArrayList<>();
-        } else {
-            entry = getEntry(key);
-        }
+        Entry<K, V> entry = getEntry(key, currentBucketIndex);
         if (entry == null) {
+            if (!buckets[currentBucketIndex].isEmpty() && isOverloaded()) {
+                resize();
+                currentBucketIndex = getBucketIndex(key);
+            }
             buckets[currentBucketIndex].add(new Entry<>(key, value));
             size++;
             return null;
@@ -67,15 +68,13 @@ public class ArrayMap<K, V> implements Map<K, V> {
     @Override
     public Entry<K, V> remove(K key) {
         List<Entry<K, V>> bucket = buckets[getBucketIndex(key)];
-        if (bucket != null) {
-            Iterator<Entry<K, V>> iterator = bucket.iterator();
-            while (iterator.hasNext()) {
-                Entry<K, V> entry = iterator.next();
-                if (Objects.equals(entry.key, key)) {
-                    iterator.remove();
-                    size--;
-                    return entry;
-                }
+        Iterator<Entry<K, V>> iterator = bucket.iterator();
+        while (iterator.hasNext()) {
+            Entry<K, V> entry = iterator.next();
+            if (Objects.equals(entry.key, key)) {
+                iterator.remove();
+                size--;
+                return entry;
             }
         }
         return null;
@@ -106,12 +105,8 @@ public class ArrayMap<K, V> implements Map<K, V> {
             @Override
             public Entry<K, V> next() {
                 if (hasNext()) {
-                    while (currentBucketNum < bucketsNum) {
+                    while (currentBucketNum < buckets.length) {
                         List<Entry<K, V>> currentBucket = buckets[currentBucketNum];
-                        if (currentBucket == null) {
-                            currentBucketNum++;
-                            continue;
-                        }
                         if (currentIterator == null) {
                             currentIterator = currentBucket.iterator();
                         }
@@ -144,19 +139,34 @@ public class ArrayMap<K, V> implements Map<K, V> {
         if (key == null) {
             return 0;
         }
-        return Math.abs(key.hashCode()) % bucketsNum;
+        return Math.abs(key.hashCode()) % buckets.length;
     }
 
     private Entry<K, V> getEntry(K key) {
-        List<Entry<K, V>> bucketList = buckets[getBucketIndex(key)];
-        if (bucketList == null) {
-            return null;
-        }
-        for (Entry<K, V> entry : bucketList) {
-            if (Objects.equals(entry.key, key)) {
-                return entry;
+        return getEntry(key, getBucketIndex(key));
+    }
+
+    private Entry<K, V> getEntry(K key, int index) {
+        List<Entry<K, V>> bucket = buckets[index];
+        if (bucket != null) {
+            for (Entry<K, V> entry : bucket) {
+                if (Objects.equals(entry.key, key)) {
+                    return entry;
+                }
             }
         }
         return null;
+    }
+
+    private boolean isOverloaded() {
+        return buckets.length * LOAD_FACTOR <= size;
+    }
+
+    private void resize() {
+        ArrayMap<K, V> newMap = new ArrayMap<>(buckets.length << 1);
+        for (Entry<K, V> entry : this) {
+            newMap.put(entry.key, entry.value);
+        }
+        buckets = newMap.buckets;
     }
 }
